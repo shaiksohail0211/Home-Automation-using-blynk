@@ -67,3 +67,6 @@ Include security sensors (e.g., motion, smoke)
 📬 Connect with Me
 
 Feel free to reach out or connect for feedback or collaboration! on LinkedIn
+[LinkedIn](https://www.linkedin.com/in/shaik-sohail-4770272bb?kutm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)
+
+#HomeAutomation #Blynk #ESP8266 #IoT #SmartHome #ArduinoIDE #TechProject #Automation #IoTProjects #LearningByDoing #EmbeddedSystems

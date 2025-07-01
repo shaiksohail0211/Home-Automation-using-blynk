@@ -1,72 +1,68 @@
-🏠📱 Home Automation Using Blynk
+#define BLYNK_TEMPLATE_ID "TMPL3Tk4MhUc1"
+#define BLYNK_TEMPLATE_NAME "Home Automatiom"
+#define BLYNK_AUTH_TOKEN "5DtiCmLSjmjbH-6aQTNNCR5HfFhDI8DF"
 
-📌 Project Overview
+#define BLYNK_PRINT Serial
 
-This project was developed as part of my IoT and embedded systems learning. The goal is to automate home appliances using the Blynk app, ESP8266, and a relay module, enabling users to control devices remotely via smartphone.
+#include <ESP8266WiFi.h>
+#include <WiFiClient.h>
+#include <BlynkSimpleEsp8266.h>
 
-🛠 Tools & Technologies
+char auth[] = BLYNK_AUTH_TOKEN;
+char ssid[] = "Sohail";
+char pass[] = "123456789";
 
-ESP8266 NodeMCU
+const int ledPin = D4;
 
-Blynk App (IoT platform)
+void connectToWiFi() {
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
 
-Relay Module, LED, Bulb
+  WiFi.begin(ssid, pass);
+  
+  int wifi_attempts = 0;
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+    wifi_attempts++;
 
-Arduino IDE (for coding & uploading)
+    if (wifi_attempts > 60) {
+      Serial.println("\nRestarting module due to failed WiFi connection...");
+      ESP.restart();
+    }
+  }
+  
+  Serial.println("\nWiFi connected!");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+}
 
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);
 
-🎯 Objectives
+  connectToWiFi();
+  
+  Blynk.config(auth);
 
-Enable wireless control of home appliances
+  while (Blynk.connect() == false) {
+    Serial.print(".");
+    delay(500);
+  }
 
-Enhance home convenience and energy efficiency
+  Serial.println("\nConnected to Blynk server!");
+}
 
-Implement IoT-based automation with real-time feedback
+BLYNK_WRITE(V2) {
+  int pinValue = param.asInt(); 
+  digitalWrite(ledPin, pinValue); 
+}
 
-
-🔍 Key Features
-
-Turn devices ON/OFF using a smartphone
-
-Real-time control over the internet via Blynk
-
-Easy setup and user-friendly interface
-
-
-🔧 Components Used
-
-ESP8266 Wi-Fi Module
-
-Relay Module
-
-Blynk IoT Mobile App
-
-Power supply + Controlled appliances (e.g., bulb, fan)
-
-
-🔑 Key Learnings
-
-Connecting microcontrollers with cloud-based apps
-
-Working with Wi-Fi communication (ESP8266)
-
-Mobile app control using Blynk dashboard
-
-Real-time hardware and software integration
-
-
-🚀 Future Enhancements
-
-Add voice control via Google Assistant
-
-Monitor energy usage of connected devices
-
-Include security sensors (e.g., motion, smoke)
-
-
-📬 Connect with Me
-
-Feel free to reach out or connect for feedback or collaboration! on LinkedIn
-[LinkedIn](https://www.linkedin.com/in/shaik-sohail-4770272bb?kutm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)
-
-#HomeAutomation #Blynk #ESP8266 #IoT #SmartHome #ArduinoIDE #TechProject #Automation #IoTProjects #LearningByDoing #EmbeddedSystems
+void loop() {
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("WiFi disconnected. Reconnecting...");
+    connectToWiFi();
+  }
+  
+  Blynk.run();
+}
